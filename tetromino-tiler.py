@@ -32,8 +32,8 @@ class Tetromino:
                         [(0, 0), (1, -1), (1, 0), (1, 1)],
                         [(0, 0), (1, 0), (2, 0), (1, 1)]]
                   }
-        #self.sortkey = {'I':0, 'O':1, 'L':2, 'P':3, '2':4, '5':5, 'T':6}
-        self.sortkey = {'I':6, 'O':5, 'L':4, 'P':3, '2':2, '5':1, 'T':0}
+        self.sortkey = {'I':0, 'O':1, 'L':2, 'P':3, '2':4, '5':5, 'T':6}
+        #self.sortkey = {'I':6, 'O':5, 'L':4, 'P':3, '2':2, '5':1, 'T':0}
         self.rotations = shapes[shape]
         self.name = shape
 
