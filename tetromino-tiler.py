@@ -110,7 +110,7 @@ class Tiler:
                 # Try and place each rotation of each tetromino
                 for rotation in self.tetrominos[piece_index]:
                     # If the tetromino was successfully placed, recurse
-                    if not self.check(row, col, marker, rotation,):
+                    if not self.check(row, col, rotation):
                         pass
                     else:
                         self.mark(row, col, marker, rotation)
@@ -129,18 +129,18 @@ class Tiler:
             self.board[top_left_row + position[0]][top_left_col + position[1]] = '.'
 
     def board_is_tiled(self):
+        """Checks if board has any empty spaces left"""
         for row in self.board:
             for col in row:
                 if col is '.':
                     return False
         return True
 
-    def check(self, top_left_row, top_left_col, marker, tetromino):
+    def check(self, top_left_row, top_left_col, tetromino):
         """Attempts to place a tetromino"""
         # Find the top leftmost position
         # Check each of the positions the tetromino takes up
         for position in tetromino:
-
             row = top_left_row + position[0]
             col = top_left_col + position[1]
             if row > self.num_rows-1 or row < 0 or col > self.num_cols-1 or col < 0:
@@ -174,15 +174,19 @@ class Tiler:
             print()
 
     def main(self):
+        """This is what gets ran when you run this file as a script"""
+        # If it has line arguments:
         if len(sys.argv) == 5:
             self.num_rows = int(sys.argv[1])
             self.num_cols = int(sys.argv[2])
             self.tetrominos = list(sys.argv[3])
+        # If it's getting input from stdin
         elif len(sys.argv) == 1:
             hort_vert = input().split(' ')
             self.tetrominos = list(input())
             self.num_cols = int(hort_vert[0])
             self.num_rows = int(hort_vert[1])
+        # If it has the wrong number of line arguments
         else:
             print("You entered the wrong number of arguments")
             print("Please enter height width list_of_pieces number_of_tests")
@@ -196,6 +200,7 @@ class Tiler:
 
 if __name__ == "__main__":
     import time
+    # If given a number of times to test, it will give the average time taken to run the test
     if int(len(sys.argv)) == 5:
         testcount = int(sys.argv[4])
         total = 0
