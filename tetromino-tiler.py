@@ -6,6 +6,7 @@ class Tetromino:
     """Holds the possible states of a tetromino"""
 
     def __init__(self, shape):
+        """Will make a list of rotations of a tetromino from a char"""
         shapes = {'I': [[(0, 0), (0, 1), (0, 2), (0, 3)],
                         [(0, 0), (1, 0), (2, 0), (3, 0)]],
 
@@ -32,8 +33,9 @@ class Tetromino:
                         [(0, 0), (1, -1), (1, 0), (1, 1)],
                         [(0, 0), (1, 0), (2, 0), (1, 1)]]
                   }
-        self.sortkey = {'I':0, 'O':1, 'L':2, 'P':3, '2':4, '5':5, 'T':6}
-        #self.sortkey = {'I':6, 'O':5, 'L':4, 'P':3, '2':2, '5':1, 'T':0}
+        # The sortkey is the order of how I want the tetrominos placed
+        # After some testing, it seems like it's best to try and place simple shapes first
+        self.sortkey = {'I': 0, 'O': 1, 'L': 2, 'P': 3, '2': 4, '5': 5, 'T': 6}
         self.rotations = shapes[shape]
         self.name = shape
 
@@ -41,9 +43,10 @@ class Tetromino:
         return str(self.name)
 
     def __lt__(self, other):
+        """This allows the sort() function to be called on a list of tetrominos"""
         return self.sortkey[self.name] < other.sortkey[other.name]
 
-    # These functions make it possible to iterate  through the rotations
+    # iter and next make it possible to iterate through the rotations
     def __iter__(self):
         self.current = 0
         return self
@@ -68,10 +71,13 @@ class Tiler:
 
     def setup(self):
         """Sets up the Board and the tetrominos"""
-        for i in range(self.vertical):
+        # Initialize the board
+        for k in range(self.vertical):
             self.board.append([])
             for j in range(self.horizontal):
-                self.board[i].append('.')
+                self.board[k].append('.')
+
+        # Take the list of letters, turn them into tetrominos, and sort them
         temp = self.tetrominos
         self.tetrominos = []
         for piece in temp:
@@ -79,7 +85,7 @@ class Tiler:
         self.tetrominos.sort()
 
     def tile(self):
-        """Wrapper for recursive tile function, """
+        """Wrapper for recursive tile function"""
         # Check if the board and tetrominos have equal area
         if self.vertical * self.horizontal != len(self.tetrominos) * 4:
             return False
@@ -93,12 +99,13 @@ class Tiler:
         # Check if we are done
         if self.board_is_tiled(board):
             return board
-        #self.display_board()
-        #print()
+        
         # Get the topmost left square
         row, col = self.get_top_left(board)
+
         # Try and place each of the tetrominos
         for piece_index in range(len(tetrominos)):
+
             if piece_index == 0 or tetrominos[piece_index] != tetrominos[piece_index-1]:
                 # Try and place each rotation of each tetromino
                 for rotation in tetrominos[piece_index]:
@@ -174,34 +181,36 @@ class Tiler:
             self.horizontal = int(sys.argv[2])
             self.tetrominos = list(sys.argv[3])
         elif len(sys.argv) == 1:
-            hort_vert = list(input())
+            hort_vert = input().split(' ')
             self.tetrominos = list(input())
             self.horizontal = int(hort_vert[0])
-            self.vertical = int(hort_vert[2])
+            self.vertical = int(hort_vert[1])
         else:
             print("You entered the wrong number of arguments")
-            print("Please enter height width list_of_pieces")
+            print("Please enter height width list_of_pieces number_of_tests")
             return
         self.setup()
         if self.tile():
             self.display_board()
         else:
-            print("It is not possible to tile this board with these tetrominos")
+            print("?")
 
 
 if __name__ == "__main__":
     import time
     if int(len(sys.argv)) == 5:
         testcount = int(sys.argv[4])
+        total = 0
+        for i in range(testcount):
+            start = time.time()
+            tiler = Tiler()
+            tiler.main()
+            end = time.time()
+            total += end - start
+            print("Time: ", end - start)
+        avgtime = total/testcount
+        print("Average time: ", avgtime)
     else:
-        testcount = 1
-    total = 0
-    for i in range(testcount):
-        start = time.time()
         tiler = Tiler()
         tiler.main()
-        end = time.time()
-        total += end - start
-        print("Time: ", end - start)
-    avgtime = total/testcount
-    print("Average time: ", avgtime)
+
