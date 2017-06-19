@@ -1,6 +1,3 @@
-Advanced AI HW1
-Rubin Stricklin
-
 This tetromino tiler will place every piece in every orientation until it
 finds a solution, then it will tell the user what that solution is. If no
 solution is found, it will tell the user that too.
